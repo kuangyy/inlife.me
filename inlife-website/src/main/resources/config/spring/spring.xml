@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- 引入jdbc配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		lazy-init="true">
+		<property name="locations">
+			<list>
+				<value>
+					classpath*:config/properties/jdbc.properties
+				</value>
+				<value>
+					classpath*:config/properties/cach.properties
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 加载cach配置 -->
+	<bean class="cn.kykys.index.utils.cache.RedisCommon">
+		<property name="cacheType" value="${cacheType}" />
+		<property name="maxIdle" value="${maxIdle}" />
+		<property name="maxTotal" value="${maxTotal}" />
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<property name="host" value="${host}" />
+		<property name="port" value="${port}" />
+		<property name="userName" value="${userName}" />
+		<property name="password" value="${password}" />
+	</bean>
+
+	<!-- 扫描文件（自动将service层注入） -->
+	<context:component-scan base-package="cn.kykys.index.business" />
+
+	<context:annotation-config />
+	<import resource="classpath*:config/db/mybatis-*.xml" />
+
+	
+</beans>
