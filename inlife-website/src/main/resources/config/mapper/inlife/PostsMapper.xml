@@ -181,4 +181,78 @@
       publish_time = #{publishTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <select id="searchByPage" parameterType="Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from posts
+    <where>
+      <if test="word != null">
+        AND title like CONCAT('%',#{word},'%') OR content like CONCAT('%',#{word},'%')
+      </if>
+    </where>
+    ORDER BY weight DESC ,update_time DESC ,create_time DESC
+    <if test="offset != null and limit != null">
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="searchCount" parameterType="Map" resultType="int">
+    select
+    count(1)
+    from posts
+    <where>
+      <if test="word != null">
+        AND title like CONCAT('%',#{word},'%') OR content like CONCAT('%',#{word},'%')
+      </if>
+    </where>
+  </select>
+
+
+
+  <select id="selectByTag" parameterType="Map" resultMap="BaseResultMap">
+    select
+    p.*
+    from posts p LEFT JOIN r_post_tag r ON r.post_id = p.id
+    <where>
+      <if test="tagId != null">
+        AND r.tag_id = #{tagId}
+      </if>
+    </where>
+    ORDER BY p.weight DESC ,p.update_time DESC ,p.create_time DESC
+    <if test="offset != null and limit != null">
+      limit #{offset},#{limit}
+    </if>
+  </select>
+
+  <select id="selectByTagCount" parameterType="java.util.Map" resultType="int">
+    select
+    COUNT(1)
+    from posts p LEFT JOIN r_post_tag r ON r.post_id = p.id
+    <where>
+      <if test="tagId != null">
+        AND r.tag_id = #{tagId}
+      </if>
+    </where>
+  </select>
+
+
+
+
+
+
+
 </mapper>

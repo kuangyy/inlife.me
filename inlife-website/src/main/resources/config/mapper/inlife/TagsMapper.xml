@@ -103,4 +103,55 @@
     update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+
+
+
+
+
+
+  <select id="selectByPage" parameterType="Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tags
+    <where>
+
+    </where>
+    ORDER BY update_time DESC ,create_time DESC
+    <if test="offset != null and limit != null">
+      limit #{offset},#{limit}
+    </if>
+  </select>
+  <select id="count" parameterType="Map" resultType="int">
+    select
+    count(1)
+    from tags
+    <where>
+
+    </where>
+  </select>
+
+  <select id="selectByPostsCount" parameterType="Map" resultType="Map">
+    select t.id, t.name, t.simbol,count(r.post_id) postCount
+    from tags t left join r_post_tag r on r.tag_id = t.id
+    group by t.id order by postCount desc,name,simbol
+
+    <if test="offset != null and limit != null">
+      limit #{offset},#{limit}
+    </if>
+  </select>
+
+  <select id="selectByPostId" parameterType="List" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" /> from tags
+    WHERE `id` IN
+    <foreach collection="list" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </select>
+
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tags where name = #{name}
+  </select>
+
 </mapper>

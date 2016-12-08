@@ -5,8 +5,10 @@ import me.inlife.website.data.TagsMapper;
 import me.inlife.website.ibusiness.IPosts;
 import me.inlife.website.ibusiness.ITags;
 import me.inlife.website.model.Posts;
+import me.inlife.website.model.RPostTagKey;
 import me.inlife.website.model.Tags;
 import me.inlife.website.model.page.PageWeb;
+import me.inlife.website.util.Chinese2Pinyin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -101,7 +103,7 @@ public class TagsBusiness implements ITags {
         if (mapList != null && mapList.size() > 0) {
             for (Map<String, Object> result : mapList) {
                 //set tag
-                Tags tagsModel = new TagsModel();
+                Tags tagsModel = new Tags();
                 tagsModel.setId((Long) result.get("id"));
                 tagsModel.setSimbol((String) result.get("simbol"));
                 tagsModel.setName((String) result.get("name"));
@@ -113,7 +115,7 @@ public class TagsBusiness implements ITags {
                     pageWeb1.setPageSize(postsCount);
 
                     List<Posts> postsModels = iPosts.selectByTag(tagsModel.getId(), pageWeb1);
-                    tagsModel.setPostsModelList(postsModels);
+                    tagsModel.setPostsList(postsModels);
                 }
 
                 tagsModelList.add(tagsModel);
@@ -135,49 +137,38 @@ public class TagsBusiness implements ITags {
         return null;
     }
 
-    public List<TagsModel> getByBookId(Long id){
-        if (id != null) {
-
-            List<Long> ids = rBookTagModelMapper.selectTagidByBookid(id);
-            if (ids != null && ids.size() > 0) {
-                return tagsModelMapper.selectByPostId(ids);
-            }
-        }
-        return null;
-    }
-
 
     public void addTagAndLinkPost(String name, Long postid) {
 
-        TagsModel tagsModel = tagsModelMapper.selectByName(name);
+        Tags tagsModel = tagsMapper.selectByName(name);
 
         Long tagid;
         if (tagsModel != null) {
             tagid = tagsModel.getId();
         } else {
-            TagsModel model = new TagsModel();
+            Tags model = new Tags();
             model.setName(name);
             model.setSimbol(Chinese2Pinyin.cn2Spell(name));
-            tagsModelMapper.insertSelective(model);
+            tagsMapper.insertSelective(model);
 
             tagid = model.getId();
         }
 
 
-        RPostTagModelKey rPostTagModelKey = new RPostTagModelKey();
+        RPostTagKey rPostTagModelKey = new RPostTagKey();
         rPostTagModelKey.setPostId(postid);
         rPostTagModelKey.setTagId(tagid);
-        rPostTagModelMapper.insert(rPostTagModelKey);
+        rPostTagMapper.insert(rPostTagModelKey);
     }
 
 
     public void deleteByPostid(Long postid) {
-        rPostTagModelMapper.deleteByPostid(postid);
+        rPostTagMapper.deleteByPostid(postid);
     }
 
-    public TagsModel getByName(String name) {
+    public Tags getByName(String name) {
         if (StringUtils.hasText(name)) {
-            return tagsModelMapper.selectByName(name);
+            return tagsMapper.selectByName(name);
         }
         return null;
     }

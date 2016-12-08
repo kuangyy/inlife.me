@@ -6,6 +6,7 @@ import me.inlife.website.ibusiness.IPosts;
 import me.inlife.website.ibusiness.ITags;
 import me.inlife.website.model.Posts;
 import me.inlife.website.model.Tags;
+import me.inlife.website.model.page.PageWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -31,36 +32,36 @@ public class PostsBusiness implements IPosts {
             Posts postsModel = postsMapper.selectByPrimaryKey(id);
 
             List<Tags> tagsModelList = iTags.getByPostId(id);
-            postsModel.setTagsModelList(tagsModelList);
+            postsModel.setTagsList(tagsModelList);
 
             return postsModel;
         }
         return null;
     }
 
-    public PostsModel getByIdAddViewCount(Long id) {
+    public Posts getByIdAddViewCount(Long id) {
 
-        PostsModel postsModel = this.getById(id);
+        Posts postsModel = this.getById(id);
         if (postsModel != null) {
-            PostsModel model = new PostsModel();
+            Posts model = new Posts();
             model.setId(postsModel.getId());
             model.setViewCount(postsModel.getViewCount() + 1);
-            postsModelMapper.updateByPrimaryKeySelective(model);
+            postsMapper.updateByPrimaryKeySelective(model);
 
 
-            List<TagsModel> tagsModelList = iTags.getByPostId(id);
-            postsModel.setTagsModelList(tagsModelList);
+            List<Tags> tagsModelList = iTags.getByPostId(id);
+            postsModel.setTagsList(tagsModelList);
         }
 
         return postsModel;
     }
 
-    public boolean add(PostsModel postsModel) {
+    public boolean add(Posts postsModel) {
         return this.add(postsModel, null);
     }
 
 
-    public boolean add(PostsModel postsModel, String tag) {
+    public boolean add(Posts postsModel, String tag) {
         if (postsModel != null) {
 
             //default publish now
@@ -68,7 +69,7 @@ public class PostsBusiness implements IPosts {
                 postsModel.setPublishTime(new Date());
             }
 
-            int i = postsModelMapper.insertSelective(postsModel);
+            int i = postsMapper.insertSelective(postsModel);
 
             if (StringUtils.hasText(tag)) {
                 this.addTag(postsModel.getId(), tag);
@@ -80,18 +81,18 @@ public class PostsBusiness implements IPosts {
         return false;
     }
 
-    public boolean update(PostsModel postsModel) {
+    public boolean update(Posts postsModel) {
         return this.update(postsModel, null);
     }
 
-    public boolean update(PostsModel postsModel, String tag) {
+    public boolean update(Posts postsModel, String tag) {
         if (postsModel != null) {
 
             if (StringUtils.hasText(tag)) {
                 this.addTag(postsModel.getId(), tag);
             }
 
-            return postsModelMapper.updateByPrimaryKeySelective(postsModel) > 0;
+            return postsMapper.updateByPrimaryKeySelective(postsModel) > 0;
         }
 
         return false;
@@ -113,31 +114,11 @@ public class PostsBusiness implements IPosts {
 
     public boolean delete(Long id) {
         if (id != null) {
-            return postsModelMapper.deleteByPrimaryKey(id) > 0;
+            return postsMapper.deleteByPrimaryKey(id) > 0;
         }
         return false;
     }
 
-    public Map<String, ?> selectByPage(PostsModel postsModel, PageWeb pageWeb) {
-
-        Map<String, Object> result = new HashMap<>();
-
-        Map<String, Object> param = new HashMap<>();
-        param.put("model", postsModel);
-        param.put("offset", pageWeb.getOffset());
-        param.put("limit", pageWeb.getLimit());
-
-        List<PostsModel> postsModelList = postsModelMapper.selectByPage(param);
-        result.put("postsModelList", postsModelList);
-
-        int count = postsModelMapper.count(param);
-        pageWeb.setPageIndex(pageWeb.getPageIndex());
-        pageWeb.setCount(count);
-
-        result.put("pageWeb", pageWeb);
-
-        return result;
-    }
 
 
     public Map<String, ?> searchByPage(String word, PageWeb pageWeb) {
@@ -148,10 +129,10 @@ public class PostsBusiness implements IPosts {
         param.put("offset", pageWeb.getOffset());
         param.put("limit", pageWeb.getLimit());
 
-        List<PostsModel> postsModelList = postsModelMapper.searchByPage(param);
+        List<Posts> postsModelList = postsMapper.searchByPage(param);
         result.put("postsModelList", postsModelList);
 
-        int count = postsModelMapper.searchCount(param);
+        int count = postsMapper.searchCount(param);
         pageWeb.setPageIndex(pageWeb.getPageIndex());
         pageWeb.setCount(count);
 
@@ -161,14 +142,14 @@ public class PostsBusiness implements IPosts {
     }
 
 
-    public List<PostsModel> selectByTag(Long tagId, PageWeb pageWeb) {
+    public List<Posts> selectByTag(Long tagId, PageWeb pageWeb) {
 
         Map<String, Object> param = new HashMap<>();
         param.put("tagId", tagId);
         param.put("offset", pageWeb.getOffset());
         param.put("limit", pageWeb.getLimit());
 
-        return postsModelMapper.selectByTag(param);
+        return postsMapper.selectByTag(param);
     }
 
     public  Map<String, ?>  selectByTagWithPage(Long tagId, PageWeb pageWeb) {
@@ -180,10 +161,10 @@ public class PostsBusiness implements IPosts {
         param.put("offset", pageWeb.getOffset());
         param.put("limit", pageWeb.getLimit());
 
-        List<PostsModel> postsModelList = postsModelMapper.selectByTag(param);
+        List<Posts> postsModelList = postsMapper.selectByTag(param);
 
         result.put("postsModelList", postsModelList);
-        int count = postsModelMapper.selectByTagCount(param);
+        int count = postsMapper.selectByTagCount(param);
         pageWeb.setCount(count);
         result.put("pageWeb", pageWeb);
 
