@@ -1,6 +1,7 @@
 package me.inlife.website.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Posts {
     private Long id;
@@ -24,6 +25,24 @@ public class Posts {
     private Date publishTime;
 
     private String content;
+
+
+
+
+
+    private List<Tags> tagsList;
+
+    public List<Tags> getTagsList() {
+        return tagsList;
+    }
+
+    public void setTagsList(List<Tags> tagsList) {
+        this.tagsList = tagsList;
+    }
+
+
+
+
 
     public Long getId() {
         return id;
