@@ -15,7 +15,7 @@
     http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
 	<!-- 扫描controller（controller层注入） -->
-	<context:component-scan base-package="cn.kykys.index.controller">
+	<context:component-scan base-package="me.inlife.website.controller">
 		<context:exclude-filter type="annotation"
 								expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
@@ -34,18 +34,15 @@
 			</bean>
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/**"/>
-			<bean class="cn.kykys.index.filter.FilterAll"/><!-- 自定义拦截器 -->
-		</mvc:interceptor>
-		<mvc:interceptor>
-			<mvc:mapping path="/weixin/**"/>
-			<bean class="cn.kykys.index.filter.WechatInterceptor"/><!-- 自定义拦截器 -->
+			<mvc:mapping path="**"/>
+			<bean class="me.inlife.website.interceptor.ManageInterceptor"/><!-- 自定义拦截器 -->
 		</mvc:interceptor>
 
 	</mvc:interceptors>
 
+
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/errors/**" location="/errors/" />
+
 
 	<bean id="validator"
 		  class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
