@@ -75,7 +75,7 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="inlifeDbSessionFactory"></property>
 		<property name="basePackage" value="me.inlife.website.data" />
-		<property name="annotationClass" value="me.inlife.website.data.Inlife" />
+		<property name="annotationClass" value="me.inlife.website.data.InlifeDB" />
 	</bean>
 
 	<bean id="inlifeDbTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">

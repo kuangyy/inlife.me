@@ -2,6 +2,7 @@ package me.inlife.website.data;
 
 import me.inlife.website.model.Category;
 
+@InlifeDB
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
 

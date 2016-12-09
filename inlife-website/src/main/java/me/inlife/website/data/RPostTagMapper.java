@@ -4,6 +4,7 @@ import me.inlife.website.model.RPostTagKey;
 
 import java.util.List;
 
+@InlifeDB
 public interface RPostTagMapper {
     int deleteByPrimaryKey(RPostTagKey key);
 

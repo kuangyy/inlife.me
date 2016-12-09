@@ -5,6 +5,7 @@ import me.inlife.website.model.Posts;
 import java.util.List;
 import java.util.Map;
 
+@InlifeDB
 public interface PostsMapper {
     int deleteByPrimaryKey(Long id);
 

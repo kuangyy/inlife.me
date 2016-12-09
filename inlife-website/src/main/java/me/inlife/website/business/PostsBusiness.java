@@ -1,6 +1,5 @@
 package me.inlife.website.business;
 
-import com.alibaba.fastjson.JSON;
 import me.inlife.website.data.PostsMapper;
 import me.inlife.website.ibusiness.IPosts;
 import me.inlife.website.ibusiness.ITags;
@@ -120,25 +119,33 @@ public class PostsBusiness implements IPosts {
     }
 
 
-
-    public Map<String, ?> searchByPage(String word, PageWeb pageWeb) {
+    public Map<String, ?> searchByMap(Map<String, Object> map, PageWeb pageWeb) {
         Map<String, Object> result = new HashMap<>();
 
-        Map<String, Object> param = new HashMap<>();
-        param.put("word", word);
-        param.put("offset", pageWeb.getOffset());
-        param.put("limit", pageWeb.getLimit());
+        if (pageWeb != null) {
+            map.put("offset", pageWeb.getOffset());
+            map.put("limit", pageWeb.getLimit());
+        }
 
-        List<Posts> postsModelList = postsMapper.searchByPage(param);
+        List<Posts> postsModelList = postsMapper.searchByPage(map);
         result.put("postsModelList", postsModelList);
 
-        int count = postsMapper.searchCount(param);
+        int count = postsMapper.searchCount(map);
         pageWeb.setPageIndex(pageWeb.getPageIndex());
         pageWeb.setCount(count);
 
         result.put("pageWeb", pageWeb);
 
         return result;
+    }
+
+
+    public Map<String, ?> searchByPage(String word, PageWeb pageWeb) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("word", word);
+
+        return this.searchByMap(param, pageWeb);
     }
 
 
@@ -152,7 +159,7 @@ public class PostsBusiness implements IPosts {
         return postsMapper.selectByTag(param);
     }
 
-    public  Map<String, ?>  selectByTagWithPage(Long tagId, PageWeb pageWeb) {
+    public Map<String, ?> selectByTagWithPage(Long tagId, PageWeb pageWeb) {
 
         Map<String, Object> result = new HashMap<>();
 

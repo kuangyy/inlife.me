@@ -5,6 +5,7 @@ import me.inlife.website.model.Tags;
 import java.util.List;
 import java.util.Map;
 
+@InlifeDB
 public interface TagsMapper {
     int deleteByPrimaryKey(Long id);
 
