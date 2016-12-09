@@ -1,6 +1,7 @@
 package me.inlife.website.controller;
 
 import me.inlife.website.ibusiness.IPosts;
+import me.inlife.website.model.page.PageWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,16 @@ public class IndexController extends BaseController {
     IPosts iPosts;
 
     @RequestMapping("/index")
-    public ModelAndView index(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+    public ModelAndView index(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
         ModelAndView mav = new ModelAndView("index");
 
 
+        PageWeb pageWeb = new PageWeb();
+        pageWeb.setPageSize(6);
 
+        Map
+        iPosts.searchByPage()
 
 
 
@@ -33,4 +38,8 @@ public class IndexController extends BaseController {
     }
 
 
+    @RequestMapping("/404")
+    public ModelAndView err404() {
+        return new ModelAndView("404");
+    }
 }

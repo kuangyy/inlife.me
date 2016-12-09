@@ -11,4 +11,14 @@ public interface Constants {
 
     String DES_ENCODE_KEY ="@$^|123_";
 
+
+
+
+
+
+
+
+
+
+
 }
